@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             SumaAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
+                        name = "Suma",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
