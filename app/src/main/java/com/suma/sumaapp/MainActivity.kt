@@ -15,7 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.suma.sumaapp.presentation.components.buttons.CategoryButton
+import com.suma.sumaapp.presentation.components.navigation.AppNavGraph
 import com.suma.sumaapp.ui.theme.SumaAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,20 +25,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
+
             SumaAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding)
-                    ) {
-                        CategoryButton(
-                            icon = painterResource(R.drawable.ic_present),
-                            selected = true,
-                            isPrimary = false,
-                            onClick = { /* TODO */ }
-                        )
-                    }
+                Scaffold { innerPadding ->
+                    AppNavGraph(
+                        navController = navController,
+                        modifier = Modifier.padding(innerPadding)
+                    )
                 }
             }
         }
