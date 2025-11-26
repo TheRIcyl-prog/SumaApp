@@ -1,4 +1,4 @@
-package com.suma.sumaapp.presentation.login
+package com.suma.sumaapp.presentation.screens.login
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

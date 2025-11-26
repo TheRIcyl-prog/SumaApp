@@ -1,4 +1,4 @@
-package com.suma.sumaapp.presentation.register
+package com.suma.sumaapp.presentation.screens.register
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

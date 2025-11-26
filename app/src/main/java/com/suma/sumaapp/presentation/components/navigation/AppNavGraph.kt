@@ -5,8 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.suma.sumaapp.presentation.login.LoginScreen
-import com.suma.sumaapp.presentation.register.RegisterScreen
+import com.suma.sumaapp.presentation.screens.login.LoginScreen
+import com.suma.sumaapp.presentation.screens.register.RegisterScreen
 
 
 @Composable
