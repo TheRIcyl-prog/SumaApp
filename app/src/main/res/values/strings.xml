@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Suma</string>
+    <string name="app_description">Finance tracking application</string>
+    <string name="app_icon_description">Suma app icon</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="forgot_password">Forgot password?</string>
+
+    //Главный экран
+    <string name="new_trata">Добавить трату</string>
 </resources>

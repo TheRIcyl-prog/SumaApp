@@ -80,7 +80,8 @@ fun RegisterScreen(
 
         PrimaryButton(
             text = "Зарегистрироваться",
-            onClick = onCreateAccountClick
+            onClick = onCreateAccountClick,
+            modifier = Modifier
         )
 
         Spacer(modifier = Modifier.height(20.dp))

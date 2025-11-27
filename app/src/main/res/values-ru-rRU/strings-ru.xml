@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Suma</string>
-    splash_loading_experience
+    <string name="app_description">Приложение учёта финансов</string>
+    <string name="app_icon_description">Иконка приложения Suma</string>
+    <string name="login_button">Вход</string>
+    <string name="register_button">Регистрация</string>
+    <string name="forgot_password">Забыли пароль?</string>
+
+    //Главный экран
+    <string name="new_trata">Добавить трату</string>
 </resources>

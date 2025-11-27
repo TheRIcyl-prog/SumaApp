@@ -13,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.suma.sumaapp.presentation.components.buttons.PrimaryButton
 import com.suma.sumaapp.presentation.components.buttons.SwitchTab
 import com.suma.sumaapp.presentation.components.card.FloatCard
@@ -26,7 +28,10 @@ fun LoginScreen(
     onLoginClick: () -> Unit = {},
     onForgotPasswordClick: () -> Unit = {},
     onSwitchToSignup: () -> Unit = {},
-    onFingerprintClick: () -> Unit = {}
+    onFingerprintClick: () -> Unit = {},
+    navController: NavController,
+    viewModel: LoginViewModel = viewModel()
+
 ) {
     Column(
         modifier = Modifier
@@ -83,7 +88,8 @@ fun LoginScreen(
 
         PrimaryButton(
             text = "Log In",
-            onClick = onLoginClick
+            onClick = onLoginClick,
+            modifier = Modifier
         )
 
         Spacer(modifier = Modifier.height(40.dp))

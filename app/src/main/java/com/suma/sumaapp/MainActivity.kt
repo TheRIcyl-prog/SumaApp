@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,8 +18,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
+import com.suma.sumaapp.navigation.NavGraph
 import com.suma.sumaapp.presentation.components.buttons.CategoryButton
-import com.suma.sumaapp.presentation.screens.launch.launcchBScreen
+import com.suma.sumaapp.presentation.screens.launch.LauncchBScreen
 import com.suma.sumaapp.ui.theme.SumaAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -26,9 +29,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             SumaAppTheme {
-                launcchBScreen(navController = rememberNavController())
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    NavGraph()
                 }
             }
         }
-    }
+    }}
 

@@ -21,13 +21,14 @@ import com.suma.sumaapp.ui.theme.LightGreen
 fun PrimaryButton(
     text: String,
     enabled: Boolean = true,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
 
     val backgroundColor = if (enabled) CaribbeanGreen else LightGreen
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(48.dp)
             .background(backgroundColor, shape = RoundedCornerShape(12.dp))
@@ -45,5 +46,5 @@ fun PrimaryButton(
 @Preview(showBackground = true)
 @Composable
 fun PreviewPrimaryButton() {
-    PrimaryButton(text = "Log In", onClick = {})
+    PrimaryButton(text = "Log In", onClick = {}, modifier = Modifier)
 }

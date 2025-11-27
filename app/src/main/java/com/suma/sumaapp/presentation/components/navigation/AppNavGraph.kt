@@ -20,7 +20,12 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier = Modifier)
 
         composable(AppRoutes.Login.route) {
             LoginScreen(
-                onSwitchToSignup = { navController.navigate(AppRoutes.Register.route) }
+                onSwitchToSignup = { navController.navigate(AppRoutes.Register.route) },
+                onLoginClick = TODO(),
+                onForgotPasswordClick = TODO(),
+                onFingerprintClick = TODO(),
+                navController = TODO(),
+                viewModel = TODO()
             )
         }
 

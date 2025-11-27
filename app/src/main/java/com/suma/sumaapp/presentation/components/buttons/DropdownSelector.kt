@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.suma.sumaapp.presentation.screens.launch.launcchBScreen
+import com.suma.sumaapp.presentation.screens.launch.LauncchBScreen
 
 
 @Composable
