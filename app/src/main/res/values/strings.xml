@@ -8,4 +8,5 @@
 
     //Главный экран
     <string name="new_trata">Добавить трату</string>
+    <string name="Ostatoc">Ostatoc</string>
 </resources>

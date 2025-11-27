@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -20,37 +19,60 @@ import com.suma.sumaapp.R
 import com.suma.sumaapp.presentation.components.buttons.PrimaryButton
 import com.suma.sumaapp.ui.theme.CaribbeanGreen
 import com.suma.sumaapp.ui.theme.Honeydew
-
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.Stroke
-
+import androidx.compose.ui.unit.Dp
 
 @Composable
 fun MainScreen(
     navController: NavController,
     viewModel: MainViewModel = viewModel()
 ) {
-    Column(
-        modifier = Modifier.background(color = CaribbeanGreen).fillMaxSize()
-    ) {
-        Box(modifier = Modifier
-            .background(
-                color = CaribbeanGreen,
-                shape = RoundedCornerShape(
-                    topStart = 24.dp,
-                    topEnd = 24.dp
-                )
-            )
-            .fillMaxWidth()
-            .weight(0.9f)){
+    val expenseSegments = remember {
+        listOf(
+            CircleSegment(Color(0xFFFF6B6B), 1500f, "Еда"),
+            CircleSegment(Color(0xFF4ECDC4), 8000f, "Транспорт"),
+            CircleSegment(Color(0xFFFFD166), 5000f, "Развлечения"),
+            CircleSegment(Color(0xFF6A0572), 12000f, "Жилье"),
+            CircleSegment(CaribbeanGreen, 15000f, "Другое")
+            , CircleSegment(Color(0xFFFF6B6B), 1500f, "Еда"),
+            CircleSegment(Color(0xFF4ECDC4), 8000f, "Транспорт"),
+            CircleSegment(Color(0xFFFFD166), 5000f, "Развлечения"),
+            CircleSegment(Color(0xFF6A0572), 12000f, "Жилье"),
+            CircleSegment(CaribbeanGreen, 15000f, "Другое"), CircleSegment(Color(0xFFFF6B6B), 1500f, "Еда"),
+            CircleSegment(Color(0xFF4ECDC4), 8000f, "Транспорт"),
+            CircleSegment(Color(0xFFFFD166), 5000f, "Развлечения"),
+            CircleSegment(Color(0xFF6A0572), 12000f, "Жилье"),
+            CircleSegment(CaribbeanGreen, 15000f, "Другое")
+        )
+    }
 
+    Column(
+        modifier = Modifier
+            .background(color = CaribbeanGreen)
+            .fillMaxSize()
+    ) {
+        Box(
+            modifier = Modifier
+                .background(
+                    color = CaribbeanGreen,
+                    shape = RoundedCornerShape(
+                        topStart = 24.dp,
+                        topEnd = 24.dp
+                    )
+                )
+                .fillMaxWidth()
+                .weight(1f),
+            contentAlignment = Alignment.Center
+        ) {
             Text(
-                text = "Приветики пистолетики"
+                text = "Приветики пистолетики",
+                style = MaterialTheme.typography.headlineMedium,
+                color = Color.White
             )
         }
+
         Column(
             modifier = Modifier
                 .background(
@@ -61,44 +83,101 @@ fun MainScreen(
                     )
                 )
                 .fillMaxWidth()
-                .weight(2f)
-        ){
-            val expenseSegments = listOf(
-                CircleSegment(Color(0xFFFF6B6B), 1500f, "Еда"),
-                CircleSegment(Color(0xFF4ECDC4), 8000f, "Транспорт"),
-                CircleSegment(Color(0xFFFFD166), 5000f, "Развлечения"),
-                CircleSegment(Color(0xFF6A0572), 12000f, "Жилье"),
-                        CircleSegment((CaribbeanGreen), 15000f, "Еда")
-            )
-
-            // Диаграмма по центру
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                contentAlignment = Alignment.Center
+                .weight(2f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                ProgressCircle(
-                    segments = expenseSegments,
-                    size = 320.dp,
-                    strokeWidth = 24.dp,
-                    modifier = Modifier.padding(bottom = 8.dp, start = 16.dp, end = 16.dp)
+                Card(
+                    modifier = Modifier
+                        .width(280.dp)
+                        .padding(bottom = 32.dp),
+                    shape = RoundedCornerShape(24.dp),
+                    colors = CardDefaults.cardColors(containerColor = CaribbeanGreen),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        ProgressCircle(
+                            segments = expenseSegments,
+                            size = 200.dp,
+                            strokeWidth = 28.dp
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = stringResource(R.string.Ostatoc),
+                            style = MaterialTheme.typography.titleMedium,
+                            color = Color.White
+                        )
+
+                        Text(
+                            text = "40 000 ₽",
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = Color.White,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                    }
+                }
+
+                CategoryLegend(
+                    categories = expenseSegments,
+                    modifier = Modifier.padding(horizontal = 24.dp)
                 )
             }
 
-
             PrimaryButton(
-                text = stringResource(
-                    R.string.new_trata),
+                text = stringResource(R.string.new_trata),
                 onClick = {},
                 modifier = Modifier
-                    .padding(bottom = 32.dp, start = 16.dp, end = 16.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 24.dp)
             )
-
-
-
         }
+    }
+}
 
+@Composable
+private fun CategoryLegend(
+    categories: List<CircleSegment>,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        categories.forEach { category ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(12.dp)
+                            .background(category.color, RoundedCornerShape(2.dp))
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = category.label,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                Text(
+                    text = "${category.value.toInt()} ₽",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray
+                )
+            }
+        }
     }
 }
 
@@ -109,12 +188,9 @@ fun MainScreenPreview() {
     MainScreen(navController = navController)
 }
 
-
-
-
 data class CircleSegment(
     val color: Color,
-    val value: Float, // значение от 0 до 1
+    val value: Float,
     val label: String = ""
 )
 
@@ -124,6 +200,8 @@ fun ProgressCircle(
     modifier: Modifier = Modifier,
     size: Dp = 200.dp,
     strokeWidth: Dp = 20.dp,
+    borderWidth: Dp = 3.dp,
+    gapWidthDegrees: Float = 2f,
     showBackground: Boolean = true,
     backgroundColor: Color = Color.LightGray.copy(alpha = 0.3f)
 ) {
@@ -132,35 +210,53 @@ fun ProgressCircle(
     Canvas(
         modifier = modifier.size(size)
     ) {
-        val canvasWidth = size.toPx()
-        val canvasHeight = size.toPx()
-        val centerX = canvasWidth / 2
-        val centerY = canvasHeight / 2
-        val radius = (canvasWidth.coerceAtMost(canvasHeight) - strokeWidth.toPx()) / 2
+        val radius = (size.toPx() - strokeWidth.toPx()) / 2
+        val center = this.center
 
-        // Фон круга
         if (showBackground) {
             drawCircle(
                 color = backgroundColor,
                 radius = radius,
-                center = Offset(centerX, centerY),
+                center = center,
                 style = Stroke(width = strokeWidth.toPx())
             )
         }
 
-        // Отрисовка сегментов
-        var startAngle = -90f // Начинаем с верха (12 часов)
+        var startAngle = -90f
 
         segments.forEach { segment ->
             val sweepAngle = 360f * (segment.value / totalValue)
+            val adjustedSweep = sweepAngle - gapWidthDegrees
+
+            if (adjustedSweep > 0f) {
+                drawArc(
+                    color = Color.White,
+                    startAngle = startAngle,
+                    sweepAngle = adjustedSweep,
+                    useCenter = false,
+                    topLeft = Offset(center.x - radius, center.y - radius),
+                    size = Size(radius * 2, radius * 2),
+                    style = Stroke(width = strokeWidth.toPx() + borderWidth.toPx())
+                )
+
+                drawArc(
+                    color = segment.color,
+                    startAngle = startAngle,
+                    sweepAngle = adjustedSweep,
+                    useCenter = false,
+                    topLeft = Offset(center.x - radius, center.y - radius),
+                    size = Size(radius * 2, radius * 2),
+                    style = Stroke(width = strokeWidth.toPx())
+                )
+            }
 
             drawArc(
-                color = segment.color,
-                startAngle = startAngle,
-                sweepAngle = sweepAngle,
+                color = Color.White,
+                startAngle = startAngle + adjustedSweep,
+                sweepAngle = gapWidthDegrees,
                 useCenter = false,
-                topLeft = Offset(centerX - radius, centerY - radius),
-                size = androidx.compose.ui.geometry.Size(radius * 2, radius * 2),
+                topLeft = Offset(center.x - radius, center.y - radius),
+                size = Size(radius * 2, radius * 2),
                 style = Stroke(width = strokeWidth.toPx())
             )
 
