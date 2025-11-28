@@ -36,15 +36,6 @@ fun MainScreen(
             CircleSegment(Color(0xFFFFD166), 5000f, "Развлечения"),
             CircleSegment(Color(0xFF6A0572), 12000f, "Жилье"),
             CircleSegment(CaribbeanGreen, 15000f, "Другое")
-            , CircleSegment(Color(0xFFFF6B6B), 1500f, "Еда"),
-            CircleSegment(Color(0xFF4ECDC4), 8000f, "Транспорт"),
-            CircleSegment(Color(0xFFFFD166), 5000f, "Развлечения"),
-            CircleSegment(Color(0xFF6A0572), 12000f, "Жилье"),
-            CircleSegment(CaribbeanGreen, 15000f, "Другое"), CircleSegment(Color(0xFFFF6B6B), 1500f, "Еда"),
-            CircleSegment(Color(0xFF4ECDC4), 8000f, "Транспорт"),
-            CircleSegment(Color(0xFFFFD166), 5000f, "Развлечения"),
-            CircleSegment(Color(0xFF6A0572), 12000f, "Жилье"),
-            CircleSegment(CaribbeanGreen, 15000f, "Другое")
         )
     }
 
@@ -63,7 +54,7 @@ fun MainScreen(
                     )
                 )
                 .fillMaxWidth()
-                .weight(1f),
+                .weight(0.5f),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -95,34 +86,24 @@ fun MainScreen(
                 Card(
                     modifier = Modifier
                         .width(280.dp)
-                        .padding(bottom = 32.dp),
+                        .padding(end = 10.dp),
                     shape = RoundedCornerShape(24.dp),
                     colors = CardDefaults.cardColors(containerColor = CaribbeanGreen),
                     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
                 ) {
-                    Column(
-                        modifier = Modifier.padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                            .padding(24.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        ProgressCircle(
+                        ProgressCircleWithText(
                             segments = expenseSegments,
+                            centerText = stringResource(R.string.Ostatoc),
+                            centerSubtext = "40 000 ₽",
                             size = 200.dp,
                             strokeWidth = 28.dp
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text(
-                            text = stringResource(R.string.Ostatoc),
-                            style = MaterialTheme.typography.titleMedium,
-                            color = Color.White
-                        )
-
-                        Text(
-                            text = "40 000 ₽",
-                            style = MaterialTheme.typography.headlineSmall,
-                            color = Color.White,
-                            modifier = Modifier.padding(top = 4.dp)
                         )
                     }
                 }
@@ -139,6 +120,43 @@ fun MainScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 24.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun ProgressCircleWithText(
+    segments: List<CircleSegment>,
+    centerText: String,
+    centerSubtext: String,
+    modifier: Modifier = Modifier,
+    size: Dp = 200.dp,
+    strokeWidth: Dp = 20.dp
+) {
+    Box(
+        modifier = modifier.size(size),
+        contentAlignment = Alignment.Center
+    ) {
+        ProgressCircle(
+            segments = segments,
+            modifier = Modifier.fillMaxSize(),
+            size = size,
+            strokeWidth = strokeWidth
+        )
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = centerText,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.White
+            )
+            Text(
+                text = centerSubtext,
+                style = MaterialTheme.typography.headlineSmall,
+                color = Color.White
             )
         }
     }
