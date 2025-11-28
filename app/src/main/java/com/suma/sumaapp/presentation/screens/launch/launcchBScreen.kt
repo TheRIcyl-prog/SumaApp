@@ -23,7 +23,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.suma.sumaapp.R
 import com.suma.sumaapp.navigation.Destinations
-import com.suma.sumaapp.presentation.screens.login.LoginScreen
 import com.suma.sumaapp.ui.theme.CaribbeanGreen
 
 
