@@ -3,7 +3,11 @@ package com.suma.sumaapp.presentation.screens.mainScreen
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,56 +26,49 @@ import com.suma.sumaapp.ui.theme.Honeydew
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
+import com.suma.sumaapp.presentation.components.items.CategoryItemRow
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun MainScreen(
-    navController: NavController,
-    viewModel: MainViewModel = viewModel()
+    navController: NavController
 ) {
-    val expenseSegments = remember {
-        listOf(
-            CircleSegment(Color(0xFFFF6B6B), 1500f, "Еда"),
-            CircleSegment(Color(0xFF4ECDC4), 8000f, "Транспорт"),
-            CircleSegment(Color(0xFFFFD166), 5000f, "Развлечения"),
-            CircleSegment(Color(0xFF6A0572), 12000f, "Жилье"),
-            CircleSegment(CaribbeanGreen, 15000f, "Другое")
-        )
-    }
+    val viewModel: MainViewModel = viewModel()
+    val uiState = viewModel.uiState.collectAsState().value
+    val expenseSegments = uiState.categories
 
     Column(
         modifier = Modifier
-            .background(color = CaribbeanGreen)
+            .background(CaribbeanGreen)
             .fillMaxSize()
     ) {
+        // Верхняя часть — приветствие
         Box(
             modifier = Modifier
                 .background(
-                    color = CaribbeanGreen,
-                    shape = RoundedCornerShape(
-                        topStart = 24.dp,
-                        topEnd = 24.dp
-                    )
+                    CaribbeanGreen,
+                    RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                 )
                 .fillMaxWidth()
                 .weight(0.5f),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Приветики пистолетики",
+                text = "Мои расходы",
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.White
             )
         }
 
+        // Нижняя часть
         Column(
             modifier = Modifier
                 .background(
-                    color = Honeydew,
-                    shape = RoundedCornerShape(
-                        topStart = 24.dp,
-                        topEnd = 24.dp
-                    )
+                    Honeydew,
+                    RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                 )
                 .fillMaxWidth()
                 .weight(2f),
@@ -80,48 +77,237 @@ fun MainScreen(
         ) {
             Column(
                 modifier = Modifier.weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+
+                // ================================
+                //    КАРТОЧКА С ДИАГРАММОЙ
+                // ================================
                 Card(
-                    modifier = Modifier
-                        .width(280.dp)
-                        .padding(end = 10.dp),
+                    modifier = Modifier.width(300.dp),
                     shape = RoundedCornerShape(24.dp),
                     colors = CardDefaults.cardColors(containerColor = CaribbeanGreen),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+                    elevation = CardDefaults.cardElevation(8.dp)
                 ) {
-                    Box(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .aspectRatio(1f)
                             .padding(24.dp),
-                        contentAlignment = Alignment.Center
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        ProgressCircleWithText(
-                            segments = expenseSegments,
-                            centerText = stringResource(R.string.Ostatoc),
-                            centerSubtext = "40 000 ₽",
-                            size = 200.dp,
-                            strokeWidth = 28.dp
-                        )
+                        // Диаграмма (фиксированная)
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .aspectRatio(1f),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            ProgressCircleWithText(
+                                segments = expenseSegments,
+                                centerText = stringResource(R.string.Ostatoc),
+                                centerSubtext = "${expenseSegments.sumOf { it.value.toDouble() }.toInt()} ₽",
+                                size = 200.dp,
+                                strokeWidth = 28.dp
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        // ================================
+                        //   ЛЕГЕНДА (если много — скролл)
+                        // ================================
+                        if (expenseSegments.isNotEmpty()) {
+                            if (expenseSegments.size > 3) {
+                                LazyColumn(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(120.dp),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    items(expenseSegments) { segment ->
+                                        CategoryLegendItem(segment)
+                                    }
+                                }
+                            } else {
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                                ) {
+                                    expenseSegments.forEach { segment ->
+                                        CategoryLegendItem(segment)
+                                    }
+                                }
+                            }
+                        } else {
+                            Text(
+                                text = "Добавьте первую трату",
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = Color.White
+                            )
+                        }
                     }
                 }
 
-                CategoryLegend(
-                    categories = expenseSegments,
-                    modifier = Modifier.padding(horizontal = 24.dp)
-                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // ================================
+                //   НИЖНИЙ СПИСОК CATEGORY ITEM
+                // ================================
+                if (expenseSegments.isNotEmpty()) {
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                            .weight(1f)
+                    ) {
+                        items(expenseSegments) { segment ->
+                            CategoryItemRow(
+                                iconPainter = painterResource(id = R.drawable.ic_ico),
+                                categoryName = segment.label,
+                                period = getCurrentPeriod(),
+                                amount = "-${segment.value.toInt()} ₽",
+                                iconBackgroundColor = segment.color
+                            )
+                        }
+                    }
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1f),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Нет добавленных трат",
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.Gray
+                        )
+                    }
+                }
             }
 
             PrimaryButton(
                 text = stringResource(R.string.new_trata),
-                onClick = {},
+                onClick = { viewModel.showAddExpenseSheet() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 24.dp)
             )
         }
+    }
+
+    // Bottom Sheet для добавления траты
+    if (uiState.showAddExpenseSheet) {
+        AddExpenseBottomSheet(
+            onDismiss = { viewModel.hideAddExpenseSheet() },
+            onAddExpense = { categoryName, amount ->
+                viewModel.addExpense(categoryName, amount)
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddExpenseBottomSheet(
+    onDismiss: () -> Unit,
+    onAddExpense: (String, Float) -> Unit
+) {
+    var categoryName by remember { mutableStateOf("") }
+    var amount by remember { mutableStateOf("") }
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(),
+        containerColor = Color.White,
+        modifier = Modifier.fillMaxHeight(0.8f)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Заголовок
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Добавить трату",
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                IconButton(onClick = onDismiss) {
+                    Icon(Icons.Default.Close, contentDescription = "Закрыть")
+                }
+            }
+
+            // Поле для названия категории
+            OutlinedTextField(
+                value = categoryName,
+                onValueChange = { categoryName = it },
+                label = { Text("Название категории") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true
+            )
+
+            // Поле для суммы
+            OutlinedTextField(
+                value = amount,
+                onValueChange = {
+                    if (it.matches(Regex("^\\d*\\.?\\d*$")) || it.isEmpty()) {
+                        amount = it
+                    }
+                },
+                label = { Text("Сумма") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                placeholder = { Text("0.00") }
+            )
+
+            // Кнопка добавления
+            PrimaryButton(
+                text = "Добавить трату",
+                onClick = {
+                    if (categoryName.isNotBlank() && amount.isNotBlank()) {
+                        onAddExpense(categoryName, amount.toFloat())
+                        categoryName = ""
+                        amount = ""
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Composable
+fun CategoryLegendItem(category: CircleSegment) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .size(12.dp)
+                    .background(category.color, RoundedCornerShape(2.dp))
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = category.label,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.White
+            )
+        }
+        Text(
+            text = "${category.value.toInt()} ₽",
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.Gray
+        )
     }
 }
 
@@ -163,56 +349,6 @@ fun ProgressCircleWithText(
 }
 
 @Composable
-private fun CategoryLegend(
-    categories: List<CircleSegment>,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        categories.forEach { category ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(12.dp)
-                            .background(category.color, RoundedCornerShape(2.dp))
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        text = category.label,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-                Text(
-                    text = "${category.value.toInt()} ₽",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
-                )
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MainScreenPreview() {
-    val navController = rememberNavController()
-    MainScreen(navController = navController)
-}
-
-data class CircleSegment(
-    val color: Color,
-    val value: Float,
-    val label: String = ""
-)
-
-@Composable
 fun ProgressCircle(
     segments: List<CircleSegment>,
     modifier: Modifier = Modifier,
@@ -223,7 +359,7 @@ fun ProgressCircle(
     showBackground: Boolean = true,
     backgroundColor: Color = Color.LightGray.copy(alpha = 0.3f)
 ) {
-    val totalValue = segments.sumOf { it.value.toDouble() }.toFloat()
+    val totalValue = if (segments.isNotEmpty()) segments.sumOf { it.value.toDouble() }.toFloat() else 1f
 
     Canvas(
         modifier = modifier.size(size)
@@ -240,45 +376,61 @@ fun ProgressCircle(
             )
         }
 
-        var startAngle = -90f
+        if (segments.isNotEmpty()) {
+            var startAngle = -90f
 
-        segments.forEach { segment ->
-            val sweepAngle = 360f * (segment.value / totalValue)
-            val adjustedSweep = sweepAngle - gapWidthDegrees
+            segments.forEach { segment ->
+                val sweepAngle = 360f * (segment.value / totalValue)
+                val adjustedSweep = sweepAngle - gapWidthDegrees
 
-            if (adjustedSweep > 0f) {
+                if (adjustedSweep > 0f) {
+                    drawArc(
+                        color = Color.White,
+                        startAngle = startAngle,
+                        sweepAngle = adjustedSweep,
+                        useCenter = false,
+                        topLeft = Offset(center.x - radius, center.y - radius),
+                        size = Size(radius * 2, radius * 2),
+                        style = Stroke(width = strokeWidth.toPx() + borderWidth.toPx())
+                    )
+
+                    drawArc(
+                        color = segment.color,
+                        startAngle = startAngle,
+                        sweepAngle = adjustedSweep,
+                        useCenter = false,
+                        topLeft = Offset(center.x - radius, center.y - radius),
+                        size = Size(radius * 2, radius * 2),
+                        style = Stroke(width = strokeWidth.toPx())
+                    )
+                }
+
                 drawArc(
                     color = Color.White,
-                    startAngle = startAngle,
-                    sweepAngle = adjustedSweep,
-                    useCenter = false,
-                    topLeft = Offset(center.x - radius, center.y - radius),
-                    size = Size(radius * 2, radius * 2),
-                    style = Stroke(width = strokeWidth.toPx() + borderWidth.toPx())
-                )
-
-                drawArc(
-                    color = segment.color,
-                    startAngle = startAngle,
-                    sweepAngle = adjustedSweep,
+                    startAngle = startAngle + adjustedSweep,
+                    sweepAngle = gapWidthDegrees,
                     useCenter = false,
                     topLeft = Offset(center.x - radius, center.y - radius),
                     size = Size(radius * 2, radius * 2),
                     style = Stroke(width = strokeWidth.toPx())
                 )
+
+                startAngle += sweepAngle
             }
-
-            drawArc(
-                color = Color.White,
-                startAngle = startAngle + adjustedSweep,
-                sweepAngle = gapWidthDegrees,
-                useCenter = false,
-                topLeft = Offset(center.x - radius, center.y - radius),
-                size = Size(radius * 2, radius * 2),
-                style = Stroke(width = strokeWidth.toPx())
-            )
-
-            startAngle += sweepAngle
         }
     }
+}
+
+private fun getCurrentPeriod(): String {
+    val dateFormat = SimpleDateFormat("d MMMM", Locale("ru"))
+    val currentDate = Calendar.getInstance()
+    val startOfMonth = Calendar.getInstance().apply { set(Calendar.DAY_OF_MONTH, 1) }
+    return "${dateFormat.format(startOfMonth.time)} — ${dateFormat.format(currentDate.time)}"
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MainScreenPreview() {
+    val navController = rememberNavController()
+    MainScreen(navController = navController)
 }

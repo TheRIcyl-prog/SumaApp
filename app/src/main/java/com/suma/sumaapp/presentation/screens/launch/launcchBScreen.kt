@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,27 +14,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.suma.sumaapp.R
-import com.suma.sumaapp.navigation.Destinations
-import com.suma.sumaapp.presentation.screens.login.LoginScreen
 import com.suma.sumaapp.ui.theme.CaribbeanGreen
 
-
-
 @Composable
-fun LauncchBScreen(
+fun LauncсhBScreen(
     navController: NavController,
     viewModel: LaunchViewModel = viewModel()
 ) {
     val isLoading = viewModel.isLoading.collectAsState().value
     val lightBackgroundColor = Color(0xFFE8F5E9)
-
 
     Scaffold(
         modifier = Modifier
@@ -52,7 +44,7 @@ fun LauncchBScreen(
             // Иконка приложения
             Icon(
                 painter = painterResource(id = R.drawable.ic_ico),
-                contentDescription = stringResource(R.string.app_icon_description),
+                contentDescription = stringResource(R.string.app_name),
                 modifier = Modifier.size(120.dp),
                 tint = CaribbeanGreen
             )
@@ -68,10 +60,11 @@ fun LauncchBScreen(
             )
 
             Text(
-                text = stringResource(R.string.app_description),
+                text = "Управляйте своими финансами",
                 fontSize = 16.sp,
                 color = Color.Gray,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 32.dp)
             )
 
             Spacer(modifier = Modifier.height(64.dp))
@@ -80,7 +73,8 @@ fun LauncchBScreen(
             Button(
                 onClick = {
                     viewModel.onLoginClick {
-                        navController.navigate(Destinations.mainScreen.route)
+                        // Навигация на экран логина
+                        navController.navigate("mainScreen")
                     }
                 },
                 modifier = Modifier
@@ -98,7 +92,7 @@ fun LauncchBScreen(
                     )
                 } else {
                     Text(
-                        text = stringResource(R.string.login_button),
+                        text = "Вход",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
@@ -112,6 +106,8 @@ fun LauncchBScreen(
             OutlinedButton(
                 onClick = {
                     viewModel.onRegisterClick {
+                        // Навигация на экран регистрации
+                        navController.navigate("register")
                     }
                 },
                 modifier = Modifier
@@ -127,7 +123,7 @@ fun LauncchBScreen(
                 enabled = !isLoading
             ) {
                 Text(
-                    text = stringResource(R.string.register_button),
+                    text = "Регистрация",
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -137,16 +133,17 @@ fun LauncchBScreen(
 
             // Текст "Забыли пароль?"
             Text(
-                text = stringResource(R.string.forgot_password),
+                text = "Забыли пароль?",
                 fontSize = 16.sp,
                 color = Color.Gray,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.clickable {
                     viewModel.onForgotPasswordClick {
+                        // Навигация на экран восстановления пароля
+                        navController.navigate("forgot_password")
                     }
                 }
             )
         }
     }
 }
-

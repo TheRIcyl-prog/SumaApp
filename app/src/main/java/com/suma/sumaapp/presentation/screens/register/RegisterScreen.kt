@@ -7,23 +7,29 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.suma.sumaapp.R
 import com.suma.sumaapp.presentation.components.buttons.PrimaryButton
 import com.suma.sumaapp.presentation.components.buttons.SwitchTab
 import com.suma.sumaapp.presentation.components.card.FloatCard
 import com.suma.sumaapp.presentation.components.fields.SumaTextField
 import com.suma.sumaapp.presentation.components.other.Avatar
-
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun RegisterScreen(
     onCreateAccountClick: () -> Unit = {},
-    onSwitchToLogin: () -> Unit = {}
+    onSwitchToLogin: () -> Unit = {},
+    viewModel: RegisterViewModel = viewModel()
 ) {
+    val uiState = viewModel.uiState.collectAsState().value
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -35,7 +41,9 @@ fun RegisterScreen(
         SwitchTab(
             options = listOf("Войти", "Зарегистрироваться"),
             selectedIndex = 1,
-            onSelect = { onSwitchToLogin() }
+            onSelect = { index ->
+                if (index == 0) onSwitchToLogin()
+            }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -46,41 +54,49 @@ fun RegisterScreen(
 
         SumaTextField(
             label = "Имя",
-            value = "",
-            onValueChange = {}
+            value = uiState.name,
+            onValueChange = { viewModel.updateName(it) }
         )
 
         Spacer(modifier = Modifier.height(18.dp))
 
         SumaTextField(
             label = "E-Mail",
-            value = "",
-            onValueChange = {}
+            value = uiState.email,
+            onValueChange = { viewModel.updateEmail(it) }
         )
 
         Spacer(modifier = Modifier.height(18.dp))
 
         SumaTextField(
             label = "Пароль",
-            value = "",
+            value = uiState.password,
             password = true,
-            onValueChange = {}
+            onValueChange = { viewModel.updatePassword(it) }
         )
 
         Spacer(modifier = Modifier.height(18.dp))
 
         SumaTextField(
             label = "Подтвердите пароль",
-            value = "",
+            value = uiState.confirmPassword,
             password = true,
-            onValueChange = {}
+            onValueChange = { viewModel.updateConfirmPassword(it) }
         )
 
         Spacer(modifier = Modifier.height(32.dp))
 
         PrimaryButton(
-            text = "Зарегистрироваться",
-            onClick = onCreateAccountClick,
+            text = if (uiState.isLoading) "Регистрация..." else "Зарегистрироваться",
+            enabled = !uiState.isLoading,
+            onClick = {
+                viewModel.register(
+                    onSuccess = onCreateAccountClick,
+                    onError = { error ->
+                        // Можно показать Snackbar или Toast
+                    }
+                )
+            },
             modifier = Modifier
         )
 

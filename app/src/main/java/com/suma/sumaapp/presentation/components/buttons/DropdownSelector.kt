@@ -19,8 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.suma.sumaapp.presentation.screens.launch.LauncchBScreen
-
 
 @Composable
 fun DropdownSelector(
@@ -42,13 +40,17 @@ fun DropdownSelector(
             Text(text = selected ?: label)
         }
 
-        DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            items.forEach {
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.background(Color.White)
+        ) {
+            items.forEach { item ->
                 DropdownMenuItem(
-                    text = { Text(it) },
+                    text = { Text(item) },
                     onClick = {
                         expanded = false
-                        onSelect(it)
+                        onSelect(item)
                     }
                 )
             }
@@ -58,11 +60,11 @@ fun DropdownSelector(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewWelcomeScreen() {
+fun DropdownSelectorPreview() {
     DropdownSelector(
-        label = TODO(),
-        items = TODO(),
-        selected = TODO(),
-        onSelect = TODO()
+        label = "Выберите категорию",
+        items = listOf("Продукты", "Транспорт", "Развлечения", "Аренда"),
+        selected = "Продукты",
+        onSelect = {}
     )
 }

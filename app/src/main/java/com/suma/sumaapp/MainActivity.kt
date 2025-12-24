@@ -20,7 +20,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.suma.sumaapp.navigation.NavGraph
 import com.suma.sumaapp.presentation.components.buttons.CategoryButton
-import com.suma.sumaapp.presentation.screens.launch.LauncchBScreen
+import com.suma.sumaapp.presentation.screens.launch.LauncсhBScreen
 import com.suma.sumaapp.ui.theme.SumaAppTheme
 
 class MainActivity : ComponentActivity() {

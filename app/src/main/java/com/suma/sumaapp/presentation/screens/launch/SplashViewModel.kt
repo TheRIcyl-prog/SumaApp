@@ -9,39 +9,35 @@ import kotlinx.coroutines.launch
 
 class LaunchViewModel : ViewModel() {
 
-    // Простое состояние загрузки (опционально)
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    // Запуск автоматической навигации
-    fun startAutoNavigation(navigateToLogin: () -> Unit) {
+    // Автоматическая навигация после задержки (например, если уже авторизован)
+    fun startAutoNavigation(navigateToMain: () -> Unit) {
         viewModelScope.launch {
-            delay(3000) // 3 секунды задержки
-            navigateToLogin()
+            delay(2000) // 2 секунды задержки
+            navigateToMain()
         }
     }
 
-    // Обработка нажатия кнопки входа
     fun onLoginClick(navigateToLogin: () -> Unit) {
         _isLoading.value = true
         viewModelScope.launch {
-            delay(50) // Короткая задержка для UX
+            delay(500) // Короткая задержка для UX
             navigateToLogin()
             _isLoading.value = false
         }
     }
 
-    // Обработка нажатия кнопки регистрации
     fun onRegisterClick(navigateToRegister: () -> Unit) {
         _isLoading.value = true
         viewModelScope.launch {
-            delay(5000)
+            delay(500) // Исправлено: было 5000 (слишком много)
             navigateToRegister()
             _isLoading.value = false
         }
     }
 
-    // Обработка "Забыли пароль?"
     fun onForgotPasswordClick(navigateToPasswordRecovery: () -> Unit) {
         navigateToPasswordRecovery()
     }
