@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "251127434692",
+    "firebase_url": "https://suma-cd179-default-rtdb.firebaseio.com",
+    "project_id": "suma-cd179",
+    "storage_bucket": "suma-cd179.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:251127434692:android:bcf66db4ca0ecac8512891",
+        "android_client_info": {
+          "package_name": "com.suma.sumaapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDb0rvQtgsNjmZqwiDevy8cejxpwDCCC6Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
