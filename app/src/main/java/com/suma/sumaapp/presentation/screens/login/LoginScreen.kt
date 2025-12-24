@@ -25,12 +25,13 @@ import com.suma.sumaapp.ui.theme.FenceGreen
 
 @Composable
 fun LoginScreen(
-    navController: NavController,
     onLoginClick: () -> Unit = {},
     onForgotPasswordClick: () -> Unit = {},
     onSwitchToSignup: () -> Unit = {},
     onFingerprintClick: () -> Unit = {},
+    navController: NavController,
     viewModel: LoginViewModel = viewModel()
+
 ) {
     Column(
         modifier = Modifier
@@ -39,8 +40,8 @@ fun LoginScreen(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Добро пожаловать!",
+
+        Text( text = "Добро пожаловать!",
             fontSize = 24.sp,
             color = FenceGreen
         )
@@ -49,11 +50,9 @@ fun LoginScreen(
 
         // Switch Login / Signup
         SwitchTab(
-            options = listOf("Войти", "Зарегистрироваться"),
+            options = listOf("Login", "Sign Up"),
             selectedIndex = 0,
-            onSelect = { index ->
-                if (index == 1) onSwitchToSignup()
-            }
+            onSelect = { onSwitchToSignup() }
         )
 
         Spacer(modifier = Modifier.height(40.dp))
@@ -81,14 +80,14 @@ fun LoginScreen(
             modifier = Modifier
                 .align(Alignment.End)
                 .clickable { onForgotPasswordClick() },
-            text = "Забыли пароль?",
+            text = "Forgot password?",
             color = CaribbeanGreen
         )
 
         Spacer(modifier = Modifier.height(30.dp))
 
         PrimaryButton(
-            text = "Войти",
+            text = "Log In",
             onClick = onLoginClick,
             modifier = Modifier
         )
@@ -102,3 +101,4 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(20.dp))
     }
 }
+
